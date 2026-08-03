@@ -1,4 +1,4 @@
-const { loadLedgerFromBalanceFile, readTransferCsv } = require('./csv');
+const { loadLedgerFromBalanceFile, readTransferCsv } = require("./helper/csv");
 
 function processTransfers(balanceFilePath, transferFilePath, logger = console) {
   const ledger = loadLedgerFromBalanceFile(balanceFilePath);
@@ -8,7 +8,9 @@ function processTransfers(balanceFilePath, transferFilePath, logger = console) {
     const result = ledger.applyTransfer(transfer);
 
     if (!result.success) {
-      logger.error(`Rejected transfer ${transfer.fromAccountId} -> ${transfer.toAccountId} (${transfer.amount.toFixed(2)}): ${result.reason}`);
+      logger.error(
+        `Rejected transfer ${transfer.fromAccountId} -> ${transfer.toAccountId} (${transfer.amount.toFixed(2)}): ${result.reason}`,
+      );
     }
   }
 

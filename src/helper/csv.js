@@ -1,16 +1,16 @@
-const { readFileSync } = require('fs');
-const { Ledger } = require('./domain/ledger');
-const { Transfer } = require('./domain/transfer');
+const { readFileSync } = require("fs");
+const { Ledger } = require("../domain/ledger");
+const { Transfer } = require("../domain/transfer");
 
 function parseCsvLines(filePath, expectedColumns, parser) {
-  const contents = readFileSync(filePath, 'utf8');
+  const contents = readFileSync(filePath, "utf8");
   const lines = contents
     .split(/\r?\n/)
     .map((line) => line.trim())
     .filter((line) => line.length > 0);
 
   return lines.map((line, index) => {
-    const columns = line.split(',').map((value) => value.trim());
+    const columns = line.split(",").map((value) => value.trim());
 
     if (columns.length !== expectedColumns) {
       throw new Error(`Invalid CSV row in ${filePath} at line ${index + 1}`);
