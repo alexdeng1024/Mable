@@ -1,7 +1,11 @@
 const { mkdtempSync, writeFileSync, rmSync } = require("fs");
 const os = require("os");
 const path = require("path");
-const { processTransfers } = require("../app");
+const {
+  processTransfers,
+  formatRejectedTransfer,
+  logBalances,
+} = require("../app");
 
 describe("processTransfers", () => {
   let tempDir;
@@ -77,5 +81,22 @@ describe("processTransfers", () => {
     expect(logger.error).toHaveBeenCalledWith(
       "Rejected transfer 1111234522226789 -> 1111234522226789 (200.00): insufficient funds",
     );
+  });
+
+  it("formats rejected transfer messages and logs balances with two decimal places", () => {
+    const transfer = {
+      fromAccountId: "1111234522226789",
+      toAccountId: "1111234522221234",
+      amount: 10.5,
+    };
+    const logger = { log: jest.fn(), error: jest.fn() };
+
+    expect(formatRejectedTransfer(transfer, "insufficient funds")).toBe(
+      "Rejected transfer 1111234522226789 -> 1111234522221234 (10.50): insufficient funds",
+    );
+
+    logBalances([{ id: "1111234522226789", balance: 10.5 }], logger);
+
+    expect(logger.log).toHaveBeenCalledWith("1111234522226789,10.50");
   });
 });

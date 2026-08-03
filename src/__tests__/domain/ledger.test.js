@@ -30,14 +30,18 @@ describe("Ledger", () => {
     const ledger = new Ledger([["1111234522226789", 100]]);
 
     expect(
-      ledger.applyTransfer(new Transfer("1111234522226789", "9999999999999999", 10)),
+      ledger.applyTransfer(
+        new Transfer("1111234522226789", "9999999999999999", 10),
+      ),
     ).toEqual({
       success: false,
       reason: "unknown account referenced",
     });
 
     expect(
-      ledger.applyTransfer(new Transfer("1111234522226789", "1111234522226789", 0)),
+      ledger.applyTransfer(
+        new Transfer("1111234522226789", "1111234522226789", 0),
+      ),
     ).toEqual({
       success: false,
       reason: "amount must be greater than zero",

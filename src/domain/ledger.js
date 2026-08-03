@@ -30,14 +30,22 @@ class Ledger {
       return { success: false, reason: "unknown account referenced" };
     }
 
-    if (fromAccount.balance < transfer.amount) {
+    if (!this.canAffordTransfer(fromAccount, transfer.amount)) {
       return { success: false, reason: "insufficient funds" };
     }
 
-    fromAccount.withdraw(transfer.amount);
-    toAccount.deposit(transfer.amount);
+    this.executeTransfer(fromAccount, toAccount, transfer.amount);
 
     return { success: true };
+  }
+
+  canAffordTransfer(account, amount) {
+    return account.balance >= amount;
+  }
+
+  executeTransfer(fromAccount, toAccount, amount) {
+    fromAccount.withdraw(amount);
+    toAccount.deposit(amount);
   }
 
   getFinalBalances() {

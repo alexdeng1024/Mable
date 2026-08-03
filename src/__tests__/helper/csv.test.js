@@ -87,8 +87,6 @@ describe("CSV helpers", () => {
     const filePath = path.join(tempDir, "bad-account.csv");
     writeFileSync(filePath, "acct-1,100\n");
 
-    expect(() => readBalanceCsv(filePath)).toThrow(
-      "Invalid account id acct-1",
-    );
+    expect(() => readBalanceCsv(filePath)).toThrow("Invalid account id acct-1");
   });
 });

@@ -9,7 +9,7 @@ class Account {
     }
 
     this.id = id;
-    this.balanceAmount = balanceAmount;
+    this.balanceAmount = Number(balanceAmount);
   }
 
   get balance() {
@@ -17,11 +17,11 @@ class Account {
   }
 
   deposit(amount) {
-    this.balanceAmount += amount;
+    this.balanceAmount = this.balanceAmount + Number(amount);
   }
 
   withdraw(amount) {
-    this.balanceAmount -= amount;
+    this.balanceAmount = this.balanceAmount - Number(amount);
   }
 }
 
