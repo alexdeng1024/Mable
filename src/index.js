@@ -27,7 +27,12 @@ function main() {
     "mable_transactions.csv",
   );
 
-  processTransfers(balanceFilePath, transferFilePath);
+  try {
+    processTransfers(balanceFilePath, transferFilePath);
+  } catch (error) {
+    console.error(`Failed to process transfers: ${error.message}`);
+    process.exitCode = 1;
+  }
 }
 
 if (require.main === module) {

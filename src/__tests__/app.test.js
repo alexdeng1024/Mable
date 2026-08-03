@@ -99,4 +99,22 @@ describe("processTransfers", () => {
 
     expect(logger.log).toHaveBeenCalledWith("1111234522226789,10.50");
   });
+
+  it("returns a stable balance list when no transfers are present", () => {
+    const balanceFilePath = path.join(tempDir, "balances.csv");
+    const transferFilePath = path.join(tempDir, "transfers.csv");
+
+    writeFileSync(balanceFilePath, "1111234522226789,100.00\n");
+    writeFileSync(transferFilePath, "\n");
+
+    const logger = { log: jest.fn(), error: jest.fn() };
+    const balances = processTransfers(
+      balanceFilePath,
+      transferFilePath,
+      logger,
+    );
+
+    expect(balances).toEqual([{ id: "1111234522226789", balance: 100 }]);
+    expect(logger.error).not.toHaveBeenCalled();
+  });
 });

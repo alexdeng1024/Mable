@@ -3,7 +3,14 @@ const { Ledger } = require("../domain/ledger");
 const { Transfer } = require("../domain/transfer");
 
 function parseCsvLines(filePath, expectedColumns, parser) {
-  const contents = readFileSync(filePath, "utf8");
+  let contents;
+
+  try {
+    contents = readFileSync(filePath, "utf8");
+  } catch (error) {
+    throw new Error(`Unable to read CSV file: ${filePath}`);
+  }
+
   const lines = contents
     .split(/\r?\n/)
     .map((line) => line.trim())

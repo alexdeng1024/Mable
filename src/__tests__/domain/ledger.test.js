@@ -61,6 +61,30 @@ describe("Ledger", () => {
     });
   });
 
+  it("rejects transfers with negative amounts", () => {
+    const ledger = new Ledger([["1111234522226789", 100]]);
+
+    expect(
+      ledger.applyTransfer(
+        new Transfer("1111234522226789", "1111234522226789", -10),
+      ),
+    ).toEqual({
+      success: false,
+      reason: "amount must be greater than zero",
+    });
+  });
+
+  it("treats same-account transfers as valid if funds are available", () => {
+    const ledger = new Ledger([["1111234522226789", 100]]);
+
+    const result = ledger.applyTransfer(
+      new Transfer("1111234522226789", "1111234522226789", 40),
+    );
+
+    expect(result).toEqual({ success: true });
+    expect(ledger.accounts.get("1111234522226789").balance).toBe(100);
+  });
+
   it("returns final balances sorted by id and rounded to two decimals", () => {
     const ledger = new Ledger([
       ["1111234522221234", 10.005],
