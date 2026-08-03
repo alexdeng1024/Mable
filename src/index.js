@@ -9,9 +9,7 @@ function resolveInputPath(providedArgument, defaultFileName) {
     candidates.push(path.resolve(process.cwd(), providedArgument));
   }
 
-  candidates.push(
-    path.resolve(process.cwd(), "../requirements", defaultFileName),
-  );
+  candidates.push(path.resolve(process.cwd(), "requirements", defaultFileName));
 
   return (
     candidates.find((candidate) => existsSync(candidate)) ||
