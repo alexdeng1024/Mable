@@ -20,24 +20,27 @@ describe("CSV helpers", () => {
 
   it("reads balance rows into a map", () => {
     const filePath = path.join(tempDir, "balances.csv");
-    writeFileSync(filePath, "acct-1,100\nacct-2,50.5\n");
+    writeFileSync(filePath, "1111234522226789,100\n1111234522221234,50.5\n");
 
     const balances = readBalanceCsv(filePath);
 
-    expect(balances.get("acct-1")).toBe(100);
-    expect(balances.get("acct-2")).toBe(50.5);
+    expect(balances.get("1111234522226789")).toBe(100);
+    expect(balances.get("1111234522221234")).toBe(50.5);
   });
 
   it("reads transfer rows into Transfer instances", () => {
     const filePath = path.join(tempDir, "transfers.csv");
-    writeFileSync(filePath, "acct-1,acct-2,25\nacct-2,acct-3,10.5\n");
+    writeFileSync(
+      filePath,
+      "1111234522226789,1111234522221234,25\n1111234522221234,1212343433335665,10.5\n",
+    );
 
     const transfers = readTransferCsv(filePath);
 
     expect(transfers).toHaveLength(2);
     expect(transfers[0]).toMatchObject({
-      fromAccountId: "acct-1",
-      toAccountId: "acct-2",
+      fromAccountId: "1111234522226789",
+      toAccountId: "1111234522221234",
       amount: 25,
     });
     expect(transfers[1].amount).toBe(10.5);
@@ -45,12 +48,12 @@ describe("CSV helpers", () => {
 
   it("loads a ledger from a balance file", () => {
     const filePath = path.join(tempDir, "balances.csv");
-    writeFileSync(filePath, "acct-1,100\nacct-2,50\n");
+    writeFileSync(filePath, "1111234522226789,100\n1111234522221234,50\n");
 
     const ledger = loadLedgerFromBalanceFile(filePath);
 
-    expect(ledger.accounts.get("acct-1").balance).toBe(100);
-    expect(ledger.accounts.get("acct-2").balance).toBe(50);
+    expect(ledger.accounts.get("1111234522226789").balance).toBe(100);
+    expect(ledger.accounts.get("1111234522221234").balance).toBe(50);
   });
 
   it("throws when a CSV row has the wrong number of columns", () => {
@@ -64,19 +67,28 @@ describe("CSV helpers", () => {
 
   it("throws when a balance value is not numeric", () => {
     const filePath = path.join(tempDir, "bad-balance.csv");
-    writeFileSync(filePath, "acct-1,not-a-number\n");
+    writeFileSync(filePath, "1111234522226789,not-a-number\n");
 
     expect(() => readBalanceCsv(filePath)).toThrow(
-      "Invalid balance value for account acct-1",
+      "Invalid balance value for account 1111234522226789",
     );
   });
 
   it("throws when a transfer amount is not numeric", () => {
     const filePath = path.join(tempDir, "bad-transfer.csv");
-    writeFileSync(filePath, "acct-1,acct-2,abc\n");
+    writeFileSync(filePath, "1111234522226789,1111234522221234,abc\n");
 
     expect(() => readTransferCsv(filePath)).toThrow(
       "Invalid transfer amount abc",
+    );
+  });
+
+  it("throws when account ids are not 16-digit numbers", () => {
+    const filePath = path.join(tempDir, "bad-account.csv");
+    writeFileSync(filePath, "acct-1,100\n");
+
+    expect(() => readBalanceCsv(filePath)).toThrow(
+      "Invalid account id acct-1",
     );
   });
 });

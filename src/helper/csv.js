@@ -27,6 +27,10 @@ function readBalanceCsv(filePath) {
     const accountId = columns[0];
     const balance = Number(columns[1]);
 
+    if (!/^\d{16}$/.test(accountId)) {
+      throw new Error(`Invalid account id ${accountId}`);
+    }
+
     if (!Number.isFinite(balance)) {
       throw new Error(`Invalid balance value for account ${accountId}`);
     }
@@ -39,13 +43,19 @@ function readBalanceCsv(filePath) {
 
 function readTransferCsv(filePath) {
   return parseCsvLines(filePath, 3, (columns) => {
+    const fromAccountId = columns[0];
+    const toAccountId = columns[1];
     const amount = Number(columns[2]);
+
+    if (!/^\d{16}$/.test(fromAccountId) || !/^\d{16}$/.test(toAccountId)) {
+      throw new Error(`Invalid account id ${fromAccountId} or ${toAccountId}`);
+    }
 
     if (!Number.isFinite(amount)) {
       throw new Error(`Invalid transfer amount ${columns[2]}`);
     }
 
-    return new Transfer(columns[0], columns[1], amount);
+    return new Transfer(fromAccountId, toAccountId, amount);
   });
 }
 
