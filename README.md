@@ -67,7 +67,7 @@ The project follows a simple layered structure:
 
 ## Development approach
 
-This project was developed with OpenSpec, which is used to describe and manage small, structured changes to the codebase.
+This project was developed with [OpenSpec](https://openspec.dev), which is used to describe and manage small, structured changes to the codebase.
 
 The OpenSpec files live under the openspec folder and document the intended behavior and implementation plan for the transfer processor. This helps keep the project aligned with the original requirements and makes it easier to evolve incrementally.
 
